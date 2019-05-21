@@ -10,7 +10,9 @@ import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.FlatFileItemWriter;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
+import org.springframework.batch.test.JobLauncherTestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
@@ -27,6 +29,19 @@ public class BatchConfiguration {
 
     @Autowired
     public StepBuilderFactory stepBuilderFactory;
+
+
+    @Bean
+    public JobLauncherTestUtils getJobLauncherTestUtils() {
+
+        return new JobLauncherTestUtils() {
+            @Override
+            @Autowired
+            public void setJob(@Qualifier("job") Job job) {
+                super.setJob(job);
+            }
+        };
+    }
 
     @Bean
     public FlatFileItemReader<Person> reader() {
